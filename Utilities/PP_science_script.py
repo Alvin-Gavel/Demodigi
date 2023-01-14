@@ -6,12 +6,12 @@ import preprocessing as pp
 import extra_functions as ef
 
 plotpath = 'Resultat/Artikel/Plottar'
-fullresultpath = 'Resultat/Artikel/Samlade_resultat.csv'
 individualresultpath = 'Resultat/Artikel/Individer'
-
 ef.make_folder(plotpath)
-ef.make_folder(fullresultpath)
 ef.make_folder(individualresultpath)
+
+fullresultpath = 'Resultat/Artikel/Samlade_resultat.csv'
+idpath = 'Resultat/Artikel/IDn.json'
 
 # We start by looking at how the individual competencies develop over time, as we had originally planned to do
 competencies = {'Misc':['Backup', 'Cookies', 'IMEI', 'Incognito', 'InfoOverInternet', 'InfoOverPhone', 'MacroVirus', 'OpenNetworks', 'Password', 'PasswordManager', 'PhoneFraud', 'PortableDeviceSafety', 'PublicComputers', 'PUK', 'Ransomware', 'SafeEnvironments', 'SocialMedia', 'Spam', 'TwoFactorAuthentication', 'Virus', 'WFH_Safety'],
@@ -31,3 +31,4 @@ mod.read_participants_results(database = 'raw_analytics')
 mod.plot_initial_performance(plotpath)
 mod.export_full_results(fullresultpath)
 mod.export_individual_results(individualresultpath)
+mod.export_IDs(idpath)
