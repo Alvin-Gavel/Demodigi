@@ -389,14 +389,14 @@ class learning_module:
 
       The import function can be given one or many filepaths. In the latter
       case, they must come from courses that are considered separate in OLI
-      Torus, but which contain questions with the same names.
+      Torus, but which contain questions with the same names. When giving
+      multiple filepaths, the function can be supplied with either a list or
+      a dict. In the latter case it will be assumed that each key of the
+      dict corresponds to one manipulation, and some extra data will be
+      stores keeping track of which participants came from which file.
       """
 
-      if type(filepaths) == str:
-         filepaths = [filepaths]
-
-      self.raw_data_full = pd.DataFrame(data={'Student ID':[], 'Date Created':[], 'Activity Title':[], 'Attempt Number':[], 'Correct?':[]})
-      for filepath in filepaths:
+      def read_raw_analytics_file(filepath, membership):
          raw = pd.read_csv(filepath, sep='\t')
          raw['Date Created']= pd.to_datetime(raw['Date Created'])
          cleaned = raw.astype({'Student ID': str}) # This sometimes gets interpreted as int
@@ -405,7 +405,24 @@ class learning_module:
             
          raw_data_section = pd.DataFrame(data={'Student ID':cleaned['Student ID'], 'Date Created':cleaned['Date Created'], 'Activity Title': cleaned['Activity Title'], 'Attempt Number': cleaned['Attempt Number'], 'Correct?': cleaned['Correct?']})
          self.raw_data_full = pd.concat([self.raw_data_full, raw_data_section])
-      
+         self.student_membership[membership] = set(cleaned['Student ID'])
+         return
+
+      self.raw_data_full = pd.DataFrame(data={'Student ID':[], 'Date Created':[], 'Activity Title':[], 'Attempt Number':[], 'Correct?':[]})
+      self.student_membership = {}
+      if type(filepaths) == str:
+         read_raw_analytics_file(filepaths, 'dummy key, ignore')
+      elif type(filepaths) == list:
+         for i in range(len(filepaths)):
+            filepath = filepaths[i]
+            read_raw_analytics_file(filepath, i)
+      elif type(filepaths) == dict:
+         for membership, filepath in filepaths.items():
+            read_raw_analytics_file(filepath, membership)
+      else:
+         print("Cannot recognise type of filepaths")
+         # There should be proper exception handling here, but I'm working on a deadline :-/
+
       self.raw_data = self.raw_data_full[(self.start_date < self.raw_data_full['Date Created']) & (self.raw_data_full['Date Created'] < self.end_date)].reset_index()
       self.results_read = True
       return
@@ -892,7 +909,33 @@ class learning_module:
       packed = json.dumps({'IDs':list(self.participants.keys())})
       f.write(packed)
       f.close()
+      return
+      
+   def export_single_manipulation(self, file_path, nondefault):
+      """
+      Write a file of manipulation information, which can be read by the
+      factorial_experiment module. This requires there to be only a single
+      manipulation. The manipulations are inferred from the dict keys given
+      when calling import_raw_analytics. It is necessary to specify which
+      one is considered not to be the default form of the teaching module.
+      
+      Note that this method is very much a kluge thrown in at the last moment.
+      """
+      f = open(file_path, 'w')
+      
+      ids = []
+      for id_set in self.student_membership.values():
+         ids += list(id_set)
+         
+      manipulation_flags = {nondefault: []}
+      for student_id in ids:
+         manipulation_flags[nondefault].append(student_id in self.student_membership[nondefault])
+      
+      packed = json.dumps({'IDs': ids, 'Manipulations': [nondefault], 'Manipulation flags': manipulation_flags})
+      f.write(packed)
+      f.close()
       return      
+      
 
    def export_datashop(self, file_path):
       """
