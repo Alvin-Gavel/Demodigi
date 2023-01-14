@@ -382,19 +382,30 @@ class learning_module:
       self.n_participants = len(self.participants)
       return
 
-   def import_raw_analytics(self, filepath):
+   def import_raw_analytics(self, filepaths):
       """
       Import the raw_analytics.tsv file given by OLI Torus and pick out the 
       relevant information.
+
+      The import function can be given one or many filepaths. In the latter
+      case, they must come from courses that are considered separate in OLI
+      Torus, but which contain questions with the same names.
       """
-      raw = pd.read_csv(filepath, sep='\t')
+
+      if type(filepaths) == str:
+         filepaths = [filepaths]
+
+      self.raw_data_full = pd.DataFrame(data={'Student ID':[], 'Date Created':[], 'Activity Title':[], 'Attempt Number':[], 'Correct?':[]})
+      for filepath in filepaths:
+         raw = pd.read_csv(filepath, sep='\t')
+         raw['Date Created']= pd.to_datetime(raw['Date Created'])
+         cleaned = raw.astype({'Student ID': str}) # This sometimes gets interpreted as int
+         if self.section_slug != None:
+            cleaned = cleaned[cleaned['Section Slug'] == self.section_slug]
+            
+         raw_data_section = pd.DataFrame(data={'Student ID':cleaned['Student ID'], 'Date Created':cleaned['Date Created'], 'Activity Title': cleaned['Activity Title'], 'Attempt Number': cleaned['Attempt Number'], 'Correct?': cleaned['Correct?']})
+         self.raw_data_full = pd.concat([self.raw_data_full, raw_data_section])
       
-      raw['Date Created']= pd.to_datetime(raw['Date Created'])
-      cleaned = raw.astype({'Student ID': str}) # This sometimes gets interpreted as int
-      if self.section_slug != None:
-         cleaned = cleaned[cleaned['Section Slug'] == self.section_slug]
-      
-      self.raw_data_full = pd.DataFrame(data={'Student ID':cleaned['Student ID'], 'Date Created':cleaned['Date Created'], 'Activity Title': cleaned['Activity Title'], 'Attempt Number': cleaned['Attempt Number'], 'Correct?': cleaned['Correct?']})
       self.raw_data = self.raw_data_full[(self.start_date < self.raw_data_full['Date Created']) & (self.raw_data_full['Date Created'] < self.end_date)].reset_index()
       self.results_read = True
       return
@@ -957,7 +968,7 @@ class learning_module:
 
    def describe_module(self):
       """
-      Output some basic numerical data about how the participants have done
+      Output some basic numeric data about how the participants have done
       as a group.
       """
       if not self.participants_input:
