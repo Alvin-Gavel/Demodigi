@@ -22,10 +22,11 @@ The current contents of this directory are:
 
 `KL_feedback_script`: Script that does the routine work related to giving feedback, for the module `Kartläggning`
 
+`PP_science_script`: Script that does the preprocessing for the scientific paper (name still pending) based on the data from Demokratisk Digitalisering
+
 `IS_user_script`: Script that does the routine work related to giving users access to the module `IT-säkerhet`
 
 `IS_access_script`: Script for the routine task of renewing access to the module `IT-säkerhet` for users who have lost it for some reason
-
 
 `Obsolete`: Directory containing code that we no longer expect to need
 
