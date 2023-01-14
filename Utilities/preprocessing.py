@@ -382,7 +382,7 @@ class learning_module:
       self.n_participants = len(self.participants)
       return
 
-   def import_raw_analytics(self, filepaths):
+   def _preliminary_import_raw_analytics(self, filepaths):
       """
       Import the raw_analytics.tsv file given by OLI Torus and pick out the 
       relevant information.
@@ -410,7 +410,7 @@ class learning_module:
       self.results_read = True
       return
       
-   def import_datashop(self, filepaths, verbose = False):
+   def _preliminary_import_datashop(self, filepaths, verbose = False):
       """
       This imports an XML file following the format specified at
       
@@ -661,14 +661,26 @@ class learning_module:
       return
 
 
-   def import_data(self, raw_analytics_path, xml_path, verbose = False, previous_mapping_path = None):
+   def import_raw_analytics(self, raw_analytics_paths, verbose = False, previous_mapping_path = None):
+      """
+      Import data from the raw_analytics files output by OLI Torus. This
+      will not allow identifying individual participants, which makes it
+      insufficient for giving feedback to participants, but will be sufficient
+      for the scientific analysis since the students are in any case anonymised.
+      """
+      self._preliminary_import_raw_analytics(raw_analytics_paths)
+      self.full_results = self.raw_data.copy()
+      return
+      
+      
+   def import_data(self, raw_analytics_paths, xml_paths, verbose = False, previous_mapping_path = None):
       """
       Import data from the raw_analytics and Datashop files output by OLI
       Torus and extract from them the data we need. Neither file individually
       contains all the data, but together they do.
       """
-      self.import_raw_analytics(raw_analytics_path)
-      self.import_datashop(xml_path)
+      self._preliminary_import_raw_analytics(raw_analytics_paths)
+      self._preliminary_import_datashop(xml_paths)
       self._infer_mapping_pseudonym_ID(verbose = verbose)#, previous_mapping_path = previous_mapping_path)
       
       student_ids = []
@@ -707,7 +719,7 @@ class learning_module:
       participant.last_answer_date = _effective_min_date
       return
       
-   def _read_participant_results_from_combined(self, participant):
+   def _read_participant_results_from_combined_or_raw_analytics(self, participant):
       """
       Find out, for each question, whether a specific participant got it
       right on the first try.
@@ -810,8 +822,8 @@ class learning_module:
          if verbose:
             print("Reading participants' results from {} database. This may take a while...".format(database))
          for participant in tqdm.tqdm(self.participants.values()):
-            if database == 'combined':
-               self._read_participant_results_from_combined(participant)
+            if database in ['combined', 'raw_analytics']:
+               self._read_participant_results_from_combined_or_raw_analytics(participant)
             elif database == 'datashop':
                self._read_participant_results_from_xml(participant)
             else:
