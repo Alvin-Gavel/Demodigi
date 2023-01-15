@@ -16,7 +16,7 @@ The current contents of the repository are:
 
 `science_analysis_script.py`: Script for analysing data for the article (name pending). The data comes from the learning module `IT-säkerhet`. The data must first be rewritten into a format readable by the `Factorial_experiment` module by the script `PP_science_script` which uses the module `preprocessing`, both in the directory `Utilities`.
 
-`science_survey_script.py` (coming soon): Script for analysing the answers to the survey given as part of the learning module `IT-säkerhet`.
+`science_survey_script.py`: Script for analysing the answers to the survey given as part of the learning module `IT-säkerhet`.
 
 `behavioural_experiment.py`: Python module for simulating a behavioural experiment that we plan to do as part of the study. With time, I will also add code for analysing the results of the actual experiment.
 
