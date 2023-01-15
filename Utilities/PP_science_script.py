@@ -15,7 +15,7 @@ idpath = 'Resultat/Artikel/IDn.json'
 manipulationpath = 'Resultat/Artikel/Manipulationer.json'
 
 # We start by looking at how the individual competencies develop over time, as we had originally planned to do
-competencies = {'Misc':['Backup', 'Cookies', 'IMEI', 'Incognito', 'InfoOverInternet', 'InfoOverPhone', 'MacroVirus', 'OpenNetworks', 'Password', 'PasswordManager', 'PhoneFraud', 'PortableDeviceSafety', 'PublicComputers', 'PUK', 'Ransomware', 'SafeEnvironments', 'SocialMedia', 'Spam', 'TwoFactorAuthentication', 'Virus', 'WFH_Safety'],
+competencies = {'Misc':['Backup', 'Cookies', 'IMEI', 'Incognito', 'InfoOverInternet', 'InfoOverPhone', 'OpenNetworks', 'Password', 'PhoneFraud', 'PortableDeviceSafety', 'PublicComputers', 'Ransomware', 'SafeEnvironments', 'SocialMedia', 'Spam', 'TwoFactorAuthentication', 'Virus', 'WFH_Safety'],
 'Phishing':['Phishing_EmailAddresses', 'Phishing_ShadyMails', 'Phishing_WebAddresses'],
 'GDPR':['GDPR_General', 'GDPR_PersonalInformation', 'GDPR_Rights', 'GDPR_SensitivePersonalData']}
 
@@ -30,6 +30,7 @@ mod.infer_participants_from_full_results()
 mod.read_participants_results(database = 'raw_analytics')
 
 mod.plot_initial_performance(plotpath)
+mod.plot_results(plotpath)
 mod.export_full_results(fullresultpath)
 mod.export_individual_results(individualresultpath)
 mod.export_IDs(idpath)
