@@ -1343,7 +1343,7 @@ class study:
    \tPath to a folder where plots can be saved. If none is specified,
    \tplots will be displayed but not saved.
    """
-   def __init__(self, name, learning_module, boundaries = None):
+   def __init__(self, name, learning_module, plot_folder = None):
       """
       Parameters
       ----------
@@ -1360,7 +1360,6 @@ class study:
       self.name = name
       self.learning_module = learning_module
       
-      self.boundaries = boundaries
       self.boundary_tests_run = False
 
       
@@ -1368,7 +1367,7 @@ class study:
       # competence before and after taking the course module
       self.measured_results = {}
       
-      self.plot_folder = None
+      self.plot_folder = plot_folder
       
       # Used when calculating and comparing the qualities for different
       # versions of the course

@@ -12,7 +12,8 @@ skills = ['WHF_Safety', 'Virus', 'TwoFactorAuthentication', 'Spam', 'SocialMedia
 bound = fe.boundaries(0.5, 0.8, 0.1)
 
 mod = fe.real_learning_module(len(skills), 4, 'Utilities/Resultat/Artikel/IDn.json', 'Utilities/Resultat/Artikel/Individer', manipulation_path = 'Utilities/Resultat/Artikel/Manipulationer.json', boundaries = bound)
-trial_study = fe.study('Artikel', mod)
+trial_study = fe.study('Artikel', mod, plot_folder = 'Article_plots')
 trial_study.describe()
 trial_study.do_tests()
 trial_study.summarise_results()
+trial_study.plot_results()
