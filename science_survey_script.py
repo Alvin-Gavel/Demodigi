@@ -28,7 +28,7 @@ question_sets = {'One to five scale': ['Survey_UnderstoodInstructions', 'Survey_
 # We then pick out the string immediately after "text":
 
 response_regex = re.compile('"text":"[1-5]"')
-digit_regex =  re.compile('[1-5]')
+digit_regex = re.compile('[1-5]')
 
 responses = {}
 errors = {}
@@ -65,5 +65,29 @@ for question_set_name, question_set in question_sets.items():
       plt.tight_layout()
       plt.savefig('Article_plots/Responses_{}.png'.format(question))
 
+# Here we look for the time input by the users. This requires us to dig in the
+# Student Response column, where entries typically look something like this:
+# {"files":[],"input":"25"}
 
+time_regex = re.compile('"input":"[0-9]+"')
+number_regex = re.compile('[0-9]+')
 
+times = {}
+for dataset_name, dataset in datasets.items():
+   entries = dataset[dataset['Activity Title'] == 'Survey_TimeOnCourse']
+
+   times[dataset_name] = []
+   for response in entries['Student Response']:
+      match = time_regex.findall(response)
+         
+      if len(match) == 1:
+         number = int(number_regex.findall(match[0])[0])
+         times[dataset_name].append(number)
+   
+   plt.clf()
+   plt.hist(times[dataset_name])
+   plt.ylabel('Frequency')
+   plt.title('Time spent on course')
+ 
+   plt.tight_layout()
+   plt.savefig('Article_plots/Times_{}.png'.format(dataset_name))
