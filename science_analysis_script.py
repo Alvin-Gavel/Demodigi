@@ -9,7 +9,9 @@ import factorial_experiment as fe
 
 skills = ['Backup', 'Cookies', 'IMEI', 'Incognito', 'InfoOverInternet', 'InfoOverPhone', 'OpenNetworks', 'Password', 'PhoneFraud', 'PortableDeviceSafety', 'PublicComputers', 'Ransomware', 'SafeEnvironments', 'SocialMedia', 'Spam', 'TwoFactorAuthentication', 'Virus', 'WFH_Safety', 'Phishing_EmailAddresses', 'Phishing_ShadyMails', 'Phishing_WebAddresses', 'GDPR_General', 'GDPR_PersonalInformation', 'GDPR_Rights', 'GDPR_SensitivePersonalData']
 
-mod = fe.real_learning_module(len(skills), 4, 'Utilities/Resultat/Artikel/IDn.json', 'Utilities/Resultat/Artikel/Individer', manipulation_path = 'Utilities/Resultat/Artikel/Manipulationer.json')
+bound = fe.boundaries(0.5, 0.8, 0.2)
+
+mod = fe.real_learning_module(len(skills), 4, 'Utilities/Resultat/Artikel/IDn.json', 'Utilities/Resultat/Artikel/Individer', manipulation_path = 'Utilities/Resultat/Artikel/Manipulationer.json', boundaries = bound)
 trial_study = fe.study('Artikel', mod)
 trial_study.describe()
 trial_study.do_tests()
