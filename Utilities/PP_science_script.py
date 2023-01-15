@@ -15,9 +15,7 @@ idpath = 'Resultat/Artikel/IDn.json'
 manipulationpath = 'Resultat/Artikel/Manipulationer.json'
 
 # We start by looking at how the individual competencies develop over time, as we had originally planned to do
-competencies = {'Misc':['Backup', 'Cookies', 'IMEI', 'Incognito', 'InfoOverInternet', 'InfoOverPhone', 'OpenNetworks', 'Password', 'PhoneFraud', 'PortableDeviceSafety', 'PublicComputers', 'Ransomware', 'SafeEnvironments', 'SocialMedia', 'Spam', 'TwoFactorAuthentication', 'Virus', 'WFH_Safety'],
-'Phishing':['Phishing_EmailAddresses', 'Phishing_ShadyMails', 'Phishing_WebAddresses'],
-'GDPR':['GDPR_General', 'GDPR_PersonalInformation', 'GDPR_Rights', 'GDPR_SensitivePersonalData']}
+competencies = {'All':['WHF_Safety', 'Virus', 'TwoFactorAuthentication', 'Spam', 'SocialMedia', 'SafeEnvironments', 'Ransomware', 'PublicComputers', 'PortableDeviceSafety', 'PhoneFraud', 'Phishing', 'Password', 'PasswordManager', 'PUK', 'OpenNetworks', 'MacroVirus', 'InfoOverPhone', 'InfoOverInternet', 'Incognito', 'IMEI', 'GDRP_SensitivePersonalData', 'GDPR_Rights', 'GDPR_PersonalInformation', 'Cookies', 'Cache', 'Botnet', 'Backup']}
 
 mod = pp.learning_module(competencies, n_sessions = 4)
 
