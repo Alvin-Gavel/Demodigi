@@ -92,6 +92,8 @@ for dataset_name, dataset in datasets.items():
    binned_times[dataset_name] = np.histogram(times[dataset_name], bins=bin_edges)
    errors[dataset_name] = np.sqrt(binned_times[dataset_name][0])
 
+   print('{} took on average {} minutes'.format(dataset_name, np.median(times[dataset_name])))
+
 plt.clf()
 x_qbl = np.arange(1, n_edges) - 0.20
 plt.bar(x_qbl, binned_times['QBL'][0], width = 0.4, label = 'QBL')
