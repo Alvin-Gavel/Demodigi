@@ -52,13 +52,14 @@ for question_set_name, question_set in question_sets.items():
 
       plt.clf()
       x_qbl = np.arange(1, 6) - 0.20
-      plt.bar(x_qbl, responses[question]['QBL'], width = 0.4)
+      plt.bar(x_qbl, responses[question]['QBL'], width = 0.4, label = 'QBL')
       plt.errorbar(x_qbl, responses[question]['QBL'], yerr=errors[question]['QBL'], fmt='none', ecolor='k', capsize = 5)
       x_pqbl = np.arange(1, 6) + 0.20
-      plt.bar(x_pqbl, responses[question]['pQBL'], width = 0.4)
+      plt.bar(x_pqbl, responses[question]['pQBL'], width = 0.4, label = 'pQBL')
       plt.errorbar(x_pqbl, responses[question]['pQBL'], yerr=errors[question]['pQBL'], fmt='none', ecolor='k', capsize = 5)
-      plt.ylabel('Responses')
+      plt.ylabel('Frequency')
       plt.title(question)
+      plt.legend()
       if question_set_name == 'Never to always scale':
          plt.xticks(ticks = np.arange(1, 6), labels = ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'], rotation=90)
       
@@ -73,6 +74,10 @@ time_regex = re.compile('"input":"[0-9]+"')
 number_regex = re.compile('[0-9]+')
 
 times = {}
+binned_times = {}
+errors = {}
+bin_edges = [0, 15, 45, 75, 105, 135, 165, 195, 225, 255]
+n_edges = len(bin_edges)
 for dataset_name, dataset in datasets.items():
    entries = dataset[dataset['Activity Title'] == 'Survey_TimeOnCourse']
 
@@ -83,11 +88,21 @@ for dataset_name, dataset in datasets.items():
       if len(match) == 1:
          number = int(number_regex.findall(match[0])[0])
          times[dataset_name].append(number)
-   
-   plt.clf()
-   plt.hist(times[dataset_name])
-   plt.ylabel('Frequency')
-   plt.title('Time spent on course')
- 
-   plt.tight_layout()
-   plt.savefig('Article_plots/Times_{}.png'.format(dataset_name))
+
+   binned_times[dataset_name] = np.histogram(times[dataset_name], bins=bin_edges)
+   errors[dataset_name] = np.sqrt(binned_times[dataset_name][0])
+
+plt.clf()
+x_qbl = np.arange(1, n_edges) - 0.20
+plt.bar(x_qbl, binned_times['QBL'][0], width = 0.4, label = 'QBL')
+plt.errorbar(x_qbl, binned_times['QBL'][0], yerr=errors['QBL'], fmt='none', ecolor='k', capsize = 3)
+x_pqbl = np.arange(1, n_edges) + 0.20
+plt.bar(x_pqbl, binned_times['pQBL'][0], width = 0.4, label = 'pQBL')
+plt.errorbar(x_pqbl, binned_times['pQBL'][0], yerr=errors['pQBL'], fmt='none', ecolor='k', capsize = 3)
+
+plt.xticks(ticks = np.arange(0, n_edges), labels = bin_edges)
+plt.ylabel('Responses')
+plt.xlabel('Time spent on course [min]')
+plt.legend()
+plt.tight_layout()
+plt.savefig('Article_plots/Times.png')
