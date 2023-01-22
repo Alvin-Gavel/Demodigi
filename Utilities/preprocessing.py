@@ -280,6 +280,11 @@ class learning_module:
    \tnumber of sessions must be inferred from the OLI-Torus output.
    n_sessions_input : bool
    \tWhether a number of sessions has been supplied
+   final_test : bool
+   \tWhether there is a final test to gauge the students skills. If this is
+   \tset to true, then the number of sessions is automatically set to 2,
+   \toverwriting any other value that has been given. The results for the
+   \tsecond 'session' will be taken from questions labelled 'Q1', but on Page ID 10399.
    participants : dict of participant or None
    \tA list of the people taking the learning module, as identified in the
    \t'Student ID' column in the output from OLI-Torus. If None is given,
@@ -314,7 +319,7 @@ class learning_module:
    \tInitially empty dict given the number of questions answered as a
    \tfunction of time.
    """
-   def __init__(self, competencies, n_sessions = np.nan, participants = None, start_date = _effective_min_date, end_date = _effective_max_date, section_slug = None):
+   def __init__(self, competencies, n_sessions = np.nan, final_test = False, participants = None, start_date = _effective_min_date, end_date = _effective_max_date, section_slug = None):
       """
       Parameters
       ----------
@@ -324,6 +329,8 @@ class learning_module:
       Optional parameters
       -------------------
       n_sessions : int
+      \tDescribed under attributes
+      final_test : bool
       \tDescribed under attributes
       participants : dict of participant or None
       \tDescribed under attributes
@@ -339,7 +346,13 @@ class learning_module:
       for competence, skills in competencies.items():
          self.skills += skills
       self.n_skills = len(self.skills)
-      self.n_sessions = n_sessions
+      self.final_test = final_test
+      if self.final_test:
+         self.n_sessions = 2
+         self.test_page_magic_number = 10399
+      else:
+         self.n_sessions = n_sessions
+         self.test_page_magic_number = np.nan
       self.n_sessions_input = np.isfinite(self.n_sessions)
       self.participants = participants
       if self.participants == None:
@@ -400,6 +413,7 @@ class learning_module:
          raw = pd.read_csv(filepath, sep='\t')
          raw['Date Created']= pd.to_datetime(raw['Date Created'])
          cleaned = raw.astype({'Student ID': str}) # This sometimes gets interpreted as int
+         cleaned = cleaned.astype({'Page ID': int}) # This otherwise gets interpreted as float
          if self.section_slug != None:
             cleaned = cleaned[cleaned['Section Slug'] == self.section_slug]
             
@@ -747,7 +761,17 @@ class learning_module:
       for skill in self.skills:
          for session in range(1, self.n_sessions + 1):
             try:
-               correct_skill = correct_participant[correct_participant['Activity Title'] == '{}_Q{}'.format(skill, session)]
+               if self.final_test:
+                  if session == 1:
+                     correct_page = correct_participant[correct_participant['Page ID'] != self.test_page_magic_number]
+                  elif session == 2: 
+                     correct_page = correct_participant[correct_participant['Page ID'] == self.test_page_magic_number]
+                  else:
+                     print("Toggle 'final_test' set but looking at session {}!".format(session))
+                     print('Something has gone wrong somewhere!')
+                  correct_skill = correct_page[correct_page['Activity Title'] == '{}_Q1'.format(skill)]
+               else:
+                  correct_skill = correct_participant[correct_participant['Activity Title'] == '{}_Q{}'.format(skill, session)]
                first_try_index = correct_skill['Attempt Number'] == 1
                # If nothing was found, this will throw an IndexError
                first_try_date = correct_skill['Date Created'][first_try_index].to_numpy()[0]
