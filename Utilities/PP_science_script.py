@@ -17,7 +17,7 @@ manipulationpath = 'Resultat/Artikel/Manipulationer.json'
 # We start by looking at how the individual competencies develop over time, as we had originally planned to do
 competencies = {'All':['WHF_Safety', 'Virus', 'TwoFactorAuthentication', 'Spam', 'SocialMedia', 'SafeEnvironments', 'Ransomware', 'PublicComputers', 'PortableDeviceSafety', 'PhoneFraud', 'Phishing', 'Password', 'PasswordManager', 'PUK', 'OpenNetworks', 'MacroVirus', 'InfoOverPhone', 'InfoOverInternet', 'Incognito', 'IMEI', 'GDRP_SensitivePersonalData', 'GDPR_Rights', 'GDPR_PersonalInformation', 'Cookies', 'Cache', 'Botnet', 'Backup']}
 
-mod = pp.learning_module(competencies, n_sessions = 4)
+mod = pp.learning_module(competencies, n_sessions = 2)
 
 # We read the datashop file to get the participants' results.
 mod.import_raw_analytics({'QBL': 'Actual_results/2022-12-11/Datshop and Raw_QBL/raw_analytics.tsv', 'pQBL': 'Actual_results/2022-12-11/Datashop and Raw_no_QBL/raw_analytics.tsv'})

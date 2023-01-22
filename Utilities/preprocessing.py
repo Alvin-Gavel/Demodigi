@@ -403,12 +403,12 @@ class learning_module:
          if self.section_slug != None:
             cleaned = cleaned[cleaned['Section Slug'] == self.section_slug]
             
-         raw_data_section = pd.DataFrame(data={'Student ID':cleaned['Student ID'], 'Date Created':cleaned['Date Created'], 'Activity Title': cleaned['Activity Title'], 'Attempt Number': cleaned['Attempt Number'], 'Correct?': cleaned['Correct?']})
+         raw_data_section = pd.DataFrame(data={'Student ID':cleaned['Student ID'], 'Date Created':cleaned['Date Created'], 'Activity Title': cleaned['Activity Title'], 'Attempt Number': cleaned['Attempt Number'], 'Correct?': cleaned['Correct?'], 'Page ID': cleaned['Page ID']})
          self.raw_data_full = pd.concat([self.raw_data_full, raw_data_section])
          self.student_membership[membership] = set(cleaned['Student ID'])
          return
 
-      self.raw_data_full = pd.DataFrame(data={'Student ID':[], 'Date Created':[], 'Activity Title':[], 'Attempt Number':[], 'Correct?':[]})
+      self.raw_data_full = pd.DataFrame(data={'Student ID':[], 'Date Created':[], 'Activity Title':[], 'Attempt Number':[], 'Correct?':[], 'Page ID':[]})
       self.student_membership = {}
       if type(filepaths) == str:
          read_raw_analytics_file(filepaths, 'dummy key, ignore')
