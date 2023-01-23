@@ -1389,7 +1389,10 @@ class study:
       statistics['treatment group median'] = np.median(treatment_group)
       statistics['control group median'] = np.median(control_group)
       if len(treatment_group) > 0 and len(control_group) > 0:
-         s, p, m, table = st.median_test(treatment_group, control_group, ties = "above")
+         try:
+            s, p, m, table = st.median_test(treatment_group, control_group, ties = "above")
+         except ValueError:
+            s, p = np.nan, np.nan
          statistics['median test test statistic'] = s
          statistics['median test p-value'] = p
          statistic, pvalue = st.mannwhitneyu(treatment_group, control_group)
