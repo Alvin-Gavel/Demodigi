@@ -1101,8 +1101,10 @@ class learning_module:
       List the participants who got every question wrong on their first try
       """
       performance = {
+         'initial silent':{},
          'initial failures':{},
          'initial successes':{},
+         'final silent':{},
          'final failures':{},
          'final successes':{},
          'sorted out after first import':{},
@@ -1111,19 +1113,25 @@ class learning_module:
          print('No participants have been read!')
       else:
          for version, member_IDs in self.student_membership.items():
+            performance['initial silent'][version] = []
             performance['initial failures'][version] = []
             performance['initial successes'][version] = []
+            performance['final silent'][version] = []
             performance['final failures'][version] = []
             performance['final successes'][version] = []
             performance['sorted out after first import'][version] = []
             for ID in sorted(member_IDs):
                try:
                   participant = self.participants[ID]
-                  if not np.any(participant.correct_first_try.loc[1, :]):
+                  if not np.any(participant.answered.loc[1, :]):
+                     performance['initial silent'][version].append(participant.ID)
+                  if np.all(np.logical_and(np.logical_not(participant.correct_first_try.loc[1, :]), participant.answered.loc[1, :])):
                      performance['initial failures'][version].append(participant.ID)
                   if np.all(participant.correct_first_try.loc[1, :]):
                      performance['initial successes'][version].append(participant.ID)
-                  if not np.any(participant.correct_first_try.loc[self.n_sessions, :]):
+                  if not np.any(participant.answered.loc[self.n_sessions, :]):
+                     performance['final silent'][version].append(participant.ID)
+                  if np.all(np.logical_and(np.logical_not(participant.correct_first_try.loc[self.n_sessions, :]), participant.answered.loc[self.n_sessions, :])):
                      performance['final failures'][version].append(participant.ID)
                   if np.all(participant.correct_first_try.loc[self.n_sessions, :]):
                      performance['final successes'][version].append(participant.ID)
@@ -1131,10 +1139,12 @@ class learning_module:
                   performance['sorted out after first import'][version].append(ID)
          
             print('In version {}'.format(version))
-            print('{} participants got every question wrong on their first try'.format(len(performance['initial failures'][version])))
+            print('{} participants gave no answer on their first session'.format(len(performance['initial silent'][version])))
+            print('{} of those who answered got every question wrong on their first try'.format(len(performance['initial failures'][version])))
             print('{} participants got every question right on their first try'.format(len(performance['initial successes'][version])))
-            print('{} participants got every question wrong on their final session/test'.format(len(performance['final failures'][version])))
-            print('{} participants got every question right on their first session/test'.format(len(performance['final successes'][version])))
+            print('{} participants gave no answer on their final session/test'.format(len(performance['final silent'][version])))
+            print('{} of those who answered got every question wrong on their final session/test'.format(len(performance['final failures'][version])))
+            print('{} participants got every question right on their final session/test'.format(len(performance['final successes'][version])))
       return performance
 
    ### Functions for plotting data
