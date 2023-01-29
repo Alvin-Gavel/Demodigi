@@ -84,7 +84,7 @@ class participant:
    finished : bool
    \tWhether the participant has answered all questions in the course module
    correct_first_try : pandas bool DataFrame
-   \tInitially empty DataFrame stating for each skill in a learning
+   \tInitially empty DataFrame stating for each question in a learning
    \tmodule whether the participant answered correctly on the first try.
    correct_from_start : dict of bool
    \tInitially empty dict stating for each skill whether a participant
@@ -1050,7 +1050,7 @@ class learning_module:
          accumulated_by_date[date] = accumulated
       return accumulated_by_date
    
-   ### Functions for inspecting data
+   ### Functions for getting written descriptions of data
 
    def describe_module(self):
       """
@@ -1096,25 +1096,34 @@ class learning_module:
             print('   {}: {}'.format(ID, status_string))
       return
       
-   def describe_initial_failures(self):
+   def describe_performance(self):
       """
-      List the participants who got every question wrong on the first try
+      List the participants who got every question wrong on their first try
       """
       if not self.participants_input:
          print('No participants have been read!')
       else:
          initial_failures = []
+         initial_successes = []
+         final_failures = []
+         final_successes = []
          for ID, participant in sorted(self.participants.items()):
-            any_right = False
-            for skill in self.skills:
-               any_right = any_right or participant.correct_from_start[skill]
-            if not any_right:
+            if not np.any(participant.correct_first_try.loc[1, :]):
                initial_failures.append(ID)
-         print('{} participants got every question wrong on the first try'.format(len(initial_failures)))
-         print('Their IDs are: {}'.format(' '.join(initial_failures)))
-      
+            if np.all(participant.correct_first_try.loc[1, :]):
+               initial_successes.append(ID)
+            if not np.any(participant.correct_first_try.loc[self.n_sessions, :]):
+               final_failures.append(ID)
+            if np.all(participant.correct_first_try.loc[self.n_sessions, :]):
+               final_successes.append(ID)
+            
+         print('{} participants got every question wrong on their first try'.format(len(initial_failures)))
+         print('{} participants got every question right on their first try'.format(len(initial_successes)))
+         print('{} participants got every question wrong on their final session/test'.format(len(final_failures)))
+         print('{} participants got every question right on their first session/test'.format(len(final_successes)))
       return
 
+   ### Functions for plotting data
    
    def plot_individual_results(self, folder_path):
       """
