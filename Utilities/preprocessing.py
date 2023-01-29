@@ -1100,28 +1100,42 @@ class learning_module:
       """
       List the participants who got every question wrong on their first try
       """
+      performance = {
+         'initial failures':{},
+         'initial successes':{},
+         'final failures':{},
+         'final successes':{},
+         'sorted out after first import':{},
+      }
       if not self.participants_input:
          print('No participants have been read!')
       else:
-         initial_failures = []
-         initial_successes = []
-         final_failures = []
-         final_successes = []
-         for ID, participant in sorted(self.participants.items()):
-            if not np.any(participant.correct_first_try.loc[1, :]):
-               initial_failures.append(ID)
-            if np.all(participant.correct_first_try.loc[1, :]):
-               initial_successes.append(ID)
-            if not np.any(participant.correct_first_try.loc[self.n_sessions, :]):
-               final_failures.append(ID)
-            if np.all(participant.correct_first_try.loc[self.n_sessions, :]):
-               final_successes.append(ID)
-            
-         print('{} participants got every question wrong on their first try'.format(len(initial_failures)))
-         print('{} participants got every question right on their first try'.format(len(initial_successes)))
-         print('{} participants got every question wrong on their final session/test'.format(len(final_failures)))
-         print('{} participants got every question right on their first session/test'.format(len(final_successes)))
-      return
+         for version, member_IDs in self.student_membership.items():
+            performance['initial failures'][version] = []
+            performance['initial successes'][version] = []
+            performance['final failures'][version] = []
+            performance['final successes'][version] = []
+            performance['sorted out after first import'][version] = []
+            for ID in sorted(member_IDs):
+               try:
+                  participant = self.participants[ID]
+                  if not np.any(participant.correct_first_try.loc[1, :]):
+                     performance['initial failures'][version].append(participant.ID)
+                  if np.all(participant.correct_first_try.loc[1, :]):
+                     performance['initial successes'][version].append(participant.ID)
+                  if not np.any(participant.correct_first_try.loc[self.n_sessions, :]):
+                     performance['final failures'][version].append(participant.ID)
+                  if np.all(participant.correct_first_try.loc[self.n_sessions, :]):
+                     performance['final successes'][version].append(participant.ID)
+               except KeyError:
+                  performance['sorted out after first import'][version].append(ID)
+         
+            print('In version {}'.format(version))
+            print('{} participants got every question wrong on their first try'.format(len(performance['initial failures'][version])))
+            print('{} participants got every question right on their first try'.format(len(performance['initial successes'][version])))
+            print('{} participants got every question wrong on their final session/test'.format(len(performance['final failures'][version])))
+            print('{} participants got every question right on their first session/test'.format(len(performance['final successes'][version])))
+      return performance
 
    ### Functions for plotting data
    
