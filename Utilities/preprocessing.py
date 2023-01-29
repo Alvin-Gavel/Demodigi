@@ -124,7 +124,14 @@ class participant:
       f = open(folder_path + self.ID.replace('/', '_') + '.json', 'w')
       # Here we do a weird thing because json can handle Python's built-in
       # bool type but not numpy's bool_ type.
-      packed = json.dumps({'ID':self.ID, 'Number of sessions':self.n_sessions(), 'Number of skills tested':self.n_skills(), 'Results':np.array(self.correct_first_try.to_numpy().tolist(), dtype=bool).tolist()})
+      packed = json.dumps({
+         'ID':self.ID,
+         'Finished':self.finished,
+         'Number of sessions':self.n_sessions(),
+         'Number of skills tested':self.n_skills(),
+         'Has answered':np.array(self.answered.to_numpy().tolist(), dtype=bool).tolist(),
+         'Results':np.array(self.correct_first_try.to_numpy().tolist(), dtype=bool).tolist(),
+      })
       f.write(packed)
       f.close()
       return
@@ -1089,6 +1096,26 @@ class learning_module:
             print('   {}: {}'.format(ID, status_string))
       return
       
+   def describe_initial_failures(self):
+      """
+      List the participants who got every question wrong on the first try
+      """
+      if not self.participants_input:
+         print('No participants have been read!')
+      else:
+         initial_failures = []
+         for ID, participant in sorted(self.participants.items()):
+            any_right = False
+            for skill in self.skills:
+               any_right = any_right or participant.correct_from_start[skill]
+            if not any_right:
+               initial_failures.append(ID)
+         print('{} participants got every question wrong on the first try'.format(len(initial_failures)))
+         print('Their IDs are: {}'.format(' '.join(initial_failures)))
+      
+      return
+
+   
    def plot_individual_results(self, folder_path):
       """
       Plot the results for each individual participant.
@@ -1126,7 +1153,7 @@ class learning_module:
       """
       if folder_path[-1] != '/':
          folder_path += '/'
-
+         
       n_skill_for_this_competency = len(self.competencies[competence])
 
       x = []
@@ -1205,11 +1232,14 @@ class learning_module:
          self.plot_performance_per_skill_for_competence(folder_path, competence)
       return
 
-   def plot_results(self, folder_path):
+   def plot_results(self, folder_path, individual_folder_path = None):
       """
       This plots everything that can be plotted
       """
-      self.plot_individual_results(folder_path)
+      if individual_folder_path == None:
+         individual_folder_path = folder_path
+      
+      self.plot_individual_results(individual_folder_path)
       self.plot_results_by_time(folder_path)
       self.plot_initial_performance(folder_path)
       return
