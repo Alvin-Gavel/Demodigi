@@ -19,12 +19,9 @@ fullresultpath = 'Resultat/Artikel/Samlade_resultat.csv'
 idpath = 'Resultat/Artikel/IDn.json'
 manipulationpath = 'Resultat/Artikel/Manipulationer.json'
 
-# We start by looking at how the individual competencies develop over time, as we had originally planned to do
-#competencies = {'All':['WHF_Safety', 'Virus', 'TwoFactorAuthentication', 'Spam', 'SocialMedia', 'SafeEnvironments', 'Ransomware', 'PublicComputers', 'PortableDeviceSafety', 'PhoneFraud', 'Phishing', 'Password', 'PasswordManager', 'PUK', 'OpenNetworks', 'MacroVirus', 'InfoOverPhone', 'InfoOverInternet', 'Incognito', 'IMEI', 'GDRP_SensitivePersonalData', 'GDPR_Rights', 'GDPR_PersonalInformation', 'Cookies', 'Cache', 'Botnet', 'Backup']}
+competencies = {'All':['Backup', 'WFH_Safety', 'Phishing_EmailAddresses', 'SafeEnvironments', 'Incognito', 'Spam', 'InfoOverPhone', 'GDPR_PersonalInformation', 'Cookies', 'PublicComputers', 'Virus', 'GDPR_Rights', 'Ransomware', 'IMEI', 'TwoFactorAuthentication', 'Password', 'PortableDeviceSafety', 'GDPR_SensitivePersonalData', 'PhoneFraud', 'SocialMedia', 'InfoOverInternet', 'Phishing_WebAddresses', 'OpenNetworks', 'Phishing_ShadyMails', 'GDPR_General']}
 
-competencies = {'All':['Virus', 'TwoFactorAuthentication', 'Spam', 'SocialMedia', 'SafeEnvironments', 'Ransomware', 'PublicComputers', 'PortableDeviceSafety', 'PhoneFraud', 'Password', 'OpenNetworks', 'InfoOverPhone', 'InfoOverInternet', 'Incognito', 'IMEI', 'GDPR_Rights', 'GDPR_PersonalInformation', 'Cookies', 'Backup']}
-
-mod = pp.learning_module(competencies, n_sessions = 2, final_test = True, start_date = datetime.date.fromisoformat('2022-11-01'))
+mod = pp.learning_module(competencies, n_sessions = 2, final_test = True, start_date = datetime.date.fromisoformat('2022-11-01'), end_date = datetime.date.fromisoformat('2023-01-12'))
 
 # We read the datashop file to get the participants' results.
 mod.import_raw_analytics({'QBL': 'Actual_results/2023-01-28/QBL/raw_analytics.tsv', 'pQBL': 'Actual_results/2023-01-28/pQBL/raw_analytics.tsv'})
@@ -34,6 +31,7 @@ mod.infer_participants_from_full_results()
 
 mod.read_participants_results(database = 'raw_analytics')
 
+mod.describe_module()
 results = mod.describe_performance()
 
 mod.plot_initial_performance(plotpath)
