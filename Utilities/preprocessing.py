@@ -969,9 +969,9 @@ class learning_module:
          ids += list(id_set)
          
       manipulation_flags = {nondefault: []}
-      for ID, participant in self.participants.items():
+      for participant in self.participants.values():
          if (not drop_unfinished) or participant.finished:
-            manipulation_flags[nondefault].append(ID in self.student_membership[nondefault])
+            manipulation_flags[nondefault].append(participant.ID in self.student_membership[nondefault])
       
       packed = json.dumps({'IDs': ids, 'Manipulations': [nondefault], 'Manipulation flags': manipulation_flags})
       f.write(packed)
