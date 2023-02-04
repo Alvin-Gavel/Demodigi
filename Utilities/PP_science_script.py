@@ -39,5 +39,5 @@ mod.plot_results(plotpath, individualplotpath)
 
 mod.export_full_results(fullresultpath)
 mod.export_individual_results(individualresultpath)
-mod.export_IDs(idpath)
-mod.export_single_manipulation(manipulationpath, 'pQBL')
+mod.export_IDs(idpath, drop_unfinished = True)
+mod.export_single_manipulation(manipulationpath, 'pQBL', drop_unfinished = True)

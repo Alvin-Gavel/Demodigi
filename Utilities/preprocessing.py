@@ -926,7 +926,7 @@ class learning_module:
             participant.save_feedback(folder_path)
       return
 
-   def export_IDs(self, file_path):
+   def export_IDs(self, file_path, drop_unfinished = False):
       """
       Write a file of participant IDs, which can be read by the
       factorial_experiment module, or by this module.
@@ -934,15 +934,22 @@ class learning_module:
       There should not be any need to use this function, except when
       participants have been inferred from the results file.
       """
+      if drop_unfinished:
+         print('Dropping all participants who did not answer every question on final session!')
+      
       f = open(file_path, 'w')
       # Here we do a weird thing because json can handle Python's built-in
       # bool type but not numpy's bool_ type.
-      packed = json.dumps({'IDs':list(self.participants.keys())})
+      to_export = []
+      for participant in self.participants.values():
+         if (not drop_unfinished) or participant.finished:
+            to_export.append(participant.ID)
+      packed = json.dumps({'IDs':to_export})
       f.write(packed)
       f.close()
       return
       
-   def export_single_manipulation(self, file_path, nondefault):
+   def export_single_manipulation(self, file_path, nondefault, drop_unfinished = False):
       """
       Write a file of manipulation information, which can be read by the
       factorial_experiment module. This requires there to be only a single
@@ -952,6 +959,9 @@ class learning_module:
       
       Note that this method is very much a kluge thrown in at the last moment.
       """
+      if drop_unfinished:
+         print('Dropping all participants who did not answer every question on final session!')
+         
       f = open(file_path, 'w')
       
       ids = []
@@ -959,8 +969,9 @@ class learning_module:
          ids += list(id_set)
          
       manipulation_flags = {nondefault: []}
-      for student_id in ids:
-         manipulation_flags[nondefault].append(student_id in self.student_membership[nondefault])
+      for ID, participant in self.participants.items():
+         if (not drop_unfinished) or participant.finished:
+            manipulation_flags[nondefault].append(ID in self.student_membership[nondefault])
       
       packed = json.dumps({'IDs': ids, 'Manipulations': [nondefault], 'Manipulation flags': manipulation_flags})
       f.write(packed)
