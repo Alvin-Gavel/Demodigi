@@ -1505,18 +1505,21 @@ class study:
       boundary_test_result = {}
       boundary_test_result['members with initially poor skills'] = np.count_nonzero(pre < poor)
       boundary_test_result['members with initially good skills'] = np.count_nonzero(pre > good)
+
+      nl = boundary_test_result['members with initially poor skills']
+      if nl == 0:
+         print("There are no members with initially poor skills!")
+      
       boundary_test_result['members with finally poor skills'] = np.count_nonzero(post < poor)
       boundary_test_result['members with finally good skills'] = np.count_nonzero(post > good)
 
       boundary_test_result['members moving from poor to good skills'] = np.count_nonzero(np.logical_and(pre < poor, post > good))
       boundary_test_result['fraction with poor skills acquiring good skills'] = boundary_test_result['members moving from poor to good skills'] / boundary_test_result['members with initially poor skills']
       
-      nl = boundary_test_result['members with initially poor skills']
-      if nl == 0:
-         print("There are no members with initially poor skills!")
       nlh = boundary_test_result['members moving from poor to good skills']
       if nlh == 0:
          print("There are no members who have moved from poor to good skills!")
+      
       self._calculate_qki_and_fill_in_dict(self._logL_bounds(self._Qki_range, nl, nlh), boundary_test_result)
       return boundary_test_result
       
