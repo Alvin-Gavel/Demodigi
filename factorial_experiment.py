@@ -1499,8 +1499,8 @@ class study:
       return log_qki
       
    def _boundary_tests(self, pre, post):
-      poor = self.learning_module.boundaries.poor
-      good = self.learning_module.boundaries.good
+      poor = self.learning_module.boundaries.poor * self.learning_module.n_skills
+      good = self.learning_module.boundaries.good * self.learning_module.n_skills
       
       boundary_test_result = {}
       boundary_test_result['members with initially poor skills'] = np.count_nonzero(pre < poor)
