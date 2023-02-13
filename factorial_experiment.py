@@ -1437,7 +1437,7 @@ class study:
          return
 
       qki_mass = qki * self._qk_sample_width
-      total_mass = sum(qki_mass)
+      total_mass = np.trapz(qki, self._Qki_range)
       if np.abs(total_mass - 1) > 0.01:
          print("Problem in calculation!")
          print("probability density function not well normalised")
@@ -1455,22 +1455,24 @@ class study:
       qkcont = dictionary['control group']['probability mass per sampled quality']
       dk = np.convolve(qktreat, np.flip(qkcont))
       
+      dk /= np.trapz(dk, self._Dk_range)
+      
       dictionary['range of quality differences'] = self._Dk_range
       dictionary['probabilities of quality differences'] = dk
       dictionary['peak of dk'] = self._Dk_range[np.argmax(dk)]
       dictionary['percentiles of dk'] = self._make_percentiles(self._Dk_range, dk)
       dictionary['median of dk'] = dictionary['percentiles of dk'][50.0]
-      PDl0 = np.sum(dk[:self._qk_samples])
-      PDg0 = np.sum(dk[self._qk_samples+1:])
+      PDl0 = np.trapz(dk[:self._qk_samples], self._Dk_range[:self._qk_samples])
+      PDg0 = np.trapz(dk[self._qk_samples+1:], self._Dk_range[self._qk_samples+1:])      
       dictionary['probability that treatment group does better than control group'] = PDg0
       dictionary['probability that treatment group does worse than control group'] = PDl0
 
       # Look very closely at this
       cutoff = int(practical_significance_cutoff / self._qk_sample_width)
 
-      PDll0 = np.sum(dk[:self._qk_samples - cutoff])
-      PDap0 = np.sum(dk[self._qk_samples - cutoff:self._qk_samples + cutoff])
-      PDgg0 = np.sum(dk[self._qk_samples + cutoff:])
+      PDll0 = np.trapz(dk[:self._qk_samples - cutoff], self._Dk_range[:self._qk_samples - cutoff])
+      PDap0 = np.trapz(dk[self._qk_samples - cutoff:self._qk_samples + cutoff], self._Dk_range[self._qk_samples - cutoff:self._qk_samples + cutoff])
+      PDgg0 = np.trapz(dk[self._qk_samples + cutoff:], self._Dk_range[self._qk_samples + cutoff:])
       dictionary['probability that treatment group does much better than control group'] = PDgg0
       dictionary['probability that treatment group does much worse than control group'] = PDll0
       dictionary['probability that treatment group does about as well as control group'] = PDap0
