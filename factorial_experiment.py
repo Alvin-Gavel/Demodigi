@@ -1467,9 +1467,7 @@ class study:
       dictionary['probability that treatment group does better than control group'] = PDg0
       dictionary['probability that treatment group does worse than control group'] = PDl0
 
-      # Look very closely at this
       cutoff = int(practical_significance_cutoff / self._qk_sample_width)
-
       PDll0 = np.trapz(dk[:self._qk_samples - cutoff], self._Dk_range[:self._qk_samples - cutoff])
       PDap0 = np.trapz(dk[self._qk_samples - cutoff:self._qk_samples + cutoff], self._Dk_range[self._qk_samples - cutoff:self._qk_samples + cutoff])
       PDgg0 = np.trapz(dk[self._qk_samples + cutoff:], self._Dk_range[self._qk_samples + cutoff:])
