@@ -1866,7 +1866,6 @@ class study:
          plt.tight_layout()  
          plt.plot(self._Dk_range, test_data['probabilities of quality differences'], label = 'Difference')
          plt.xlim(-1, 1)
-         plt.axvline(x = 0.0, c = 'k')
          plt.axvline(x = self.learning_module.boundaries.minimum_quality_difference, linestyle = '--', c = 'k')
          plt.axvline(x =-self.learning_module.boundaries.minimum_quality_difference, linestyle = '--', c = 'k')
          plt.savefig('./{}/ill_{}_{}_{}_{}_difference.png'.format(self.plot_folder, self.name.replace(' ', '_'), test_name, description, choice.name.replace(' ', '_')))
