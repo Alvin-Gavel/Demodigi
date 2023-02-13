@@ -1851,6 +1851,8 @@ class study:
          plt.plot(self._Qki_range, test_data['control group']['probabilities of qualities'], label = 'Control')
          plt.plot(self._Qki_range, test_data['treatment group']['probabilities of qualities'], label = 'Treatment')
          plt.xlim(0, 1)
+         plt.xlabel(r'Q')
+         plt.ylabel(r'p(Q)')
          plt.legend()
          plt.savefig('./{}/ill_{}_{}_{}_{}.png'.format(self.plot_folder, self.name.replace(' ', '_'), test_name, description, choice.name.replace(' ', '_')))
                
@@ -1866,6 +1868,9 @@ class study:
          plt.tight_layout()  
          plt.plot(self._Dk_range, test_data['probabilities of quality differences'], label = 'Difference')
          plt.xlim(-1, 1)
+         plt.ylim(0, 1.1 * max(test_data['probabilities of quality differences']))
+         plt.xlabel(r'D')
+         plt.ylabel(r'p(D)')
          plt.axvline(x = self.learning_module.boundaries.minimum_quality_difference, linestyle = '--', c = 'k')
          plt.axvline(x =-self.learning_module.boundaries.minimum_quality_difference, linestyle = '--', c = 'k')
          plt.savefig('./{}/ill_{}_{}_{}_{}_difference.png'.format(self.plot_folder, self.name.replace(' ', '_'), test_name, description, choice.name.replace(' ', '_')))
