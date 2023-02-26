@@ -20,6 +20,8 @@ The current contents of the repository are:
 
 `science_survey_script.py`: Script for analysing the answers to the survey given as part of the learning module `IT-säkerhet`.
 
+`science_time_script.py`: Script for estimating the time participants spent on the learning module `IT-säkerhet`.
+
 `behavioural_experiment.py`: Python module for simulating a behavioural experiment that we plan to do as part of the study. With time, I will also add code for analysing the results of the actual experiment.
 
 `BE_test_script.py`: Script intended as a test of the module `behavioural_experiment`, by running some functions and plotting the results.

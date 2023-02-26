@@ -10,9 +10,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-datasets = {'QBL': pd.read_csv('Utilities/Actual_results/2022-12-11/Datshop and Raw_QBL/raw_analytics.tsv', sep='\t'),
-'pQBL':pd.read_csv('Utilities/Actual_results/2022-12-11/Datashop and Raw_no_QBL/raw_analytics.tsv', sep='\t')}
+datasets = {'QBL': pd.read_csv('Utilities/Actual_results/2023-01-28/Datshop and Raw_QBL/raw_analytics.tsv', sep='\t'),
+'pQBL':pd.read_csv('Utilities/Actual_results/2023-01-28/Datashop and Raw_no_QBL/raw_analytics.tsv', sep='\t')}
 
+# TODO: Replace this with something that reads only the participants who finished.
 n_members = {}
 for dataset_name, dataset in datasets.items():
    n_members[dataset_name] = len(set(dataset['Student ID']))
