@@ -31,6 +31,7 @@ agnosticism
 airbag
 akademi
 akademiker
+akrobat
 akt
 aktie
 aktiehandel
@@ -881,6 +882,9 @@ chokladströssel
 chokladtårta
 ciabatta
 cirkel
+cirkus
+cirkusclown
+cirkustält
 citattecken
 citronsyra
 clown
@@ -1187,6 +1191,7 @@ eldrött
 eldsflamma
 eldsjätte
 eldsken
+eldslukare
 eldslåga
 eldupphöravtal
 eldvapen
@@ -3323,6 +3328,7 @@ lejonman
 lejonnos
 lejonpäls
 lejonsvans
+lejontämjare
 lejonunge
 lejonöga
 lek
@@ -5861,6 +5867,7 @@ svärdsegg
 svärdshugg
 svärdsklinga
 svärdsknapp
+svärdslukare
 svärdsspets
 svärdsstöt
 svärfar
@@ -6234,6 +6241,7 @@ transplantation
 transport
 transportbil
 transportfordon
+trapetskonstnär
 trappa
 trappsteg
 trasa
