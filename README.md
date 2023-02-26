@@ -14,6 +14,8 @@ The current contents of the repository are:
 
 `KL_analysis_script.py`: Script for analysing data from the learning module `Kartläggning`. The data must first be rewritten into a format readable by the `Factorial_experiment` module by the module `preprocessing`, which is found in the directory `Utilities`.
 
+`requirements.txt`: File listing the Python modules used in this repository, and which versions I used.
+
 `science_analysis_script.py`: Script for analysing data for the article (name pending). The data comes from the learning module `IT-säkerhet`. The data must first be rewritten into a format readable by the `Factorial_experiment` module by the script `PP_science_script` which uses the module `preprocessing`, both in the directory `Utilities`.
 
 `science_survey_script.py`: Script for analysing the answers to the survey given as part of the learning module `IT-säkerhet`.
