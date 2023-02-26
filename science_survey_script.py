@@ -10,8 +10,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-datasets = {'QBL': pd.read_csv('Utilities/Actual_results/2023-01-28/Datshop and Raw_QBL/raw_analytics.tsv', sep='\t'),
-'pQBL':pd.read_csv('Utilities/Actual_results/2023-01-28/Datashop and Raw_no_QBL/raw_analytics.tsv', sep='\t')}
+datasets = {'QBL': pd.read_csv('Utilities/Actual_results/2023-01-28/QBL/raw_analytics.tsv', sep='\t'),
+'pQBL':pd.read_csv('Utilities/Actual_results/2023-01-28/pQBL/raw_analytics.tsv', sep='\t')}
 
 # TODO: Replace this with something that reads only the participants who finished.
 n_members = {}
@@ -108,4 +108,4 @@ plt.ylabel('Responses')
 plt.xlabel('Time spent on course [min]')
 plt.legend()
 plt.tight_layout()
-plt.savefig('Article_plots/Times.png')
+plt.savefig('Article_plots/Times_own_estimate.png')

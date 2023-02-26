@@ -9,7 +9,7 @@ import datetime
 
 import numpy as np
 import pandas as pd
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 # This is the maximum amount of time that we believe a person will actually
 # spend on answering a question. If we see that somebody takes more time than
@@ -55,3 +55,35 @@ for member_name, member_timestamps in timestamps.items():
          assumed_coffee_breaks[member_name] += 1
       else:
       	 total_time[member_name] += time_diff
+
+times = {}
+binned_times = {}
+errors = {}
+bin_edges = [0, 15, 45, 75, 105, 135, 165, 195, 225, 255]
+n_edges = len(bin_edges)
+for dataset_name, dataset in datasets.items():
+   times[dataset_name] = []
+   for member_name in members[dataset_name]:
+      member_total_time = total_time[member_name]
+      if member_total_time > datetime.timedelta(minutes=0):
+         times[dataset_name].append(int(member_total_time / np.timedelta64(1, 'm')))
+
+   binned_times[dataset_name] = np.histogram(times[dataset_name], bins=bin_edges)
+   errors[dataset_name] = np.sqrt(binned_times[dataset_name][0])
+
+   print('{} took on average {} minutes'.format(dataset_name, np.median(times[dataset_name])))
+
+plt.clf()
+x_qbl = np.arange(1, n_edges) - 0.20
+plt.bar(x_qbl, binned_times['QBL'][0], width = 0.4, label = 'QBL')
+plt.errorbar(x_qbl, binned_times['QBL'][0], yerr=errors['QBL'], fmt='none', ecolor='k', capsize = 3)
+x_pqbl = np.arange(1, n_edges) + 0.20
+plt.bar(x_pqbl, binned_times['pQBL'][0], width = 0.4, label = 'pQBL')
+plt.errorbar(x_pqbl, binned_times['pQBL'][0], yerr=errors['pQBL'], fmt='none', ecolor='k', capsize = 3)
+
+plt.xticks(ticks = np.arange(0, n_edges), labels = bin_edges)
+plt.ylabel('Estimates')
+plt.xlabel('Time spent on course [min]')
+plt.legend()
+plt.tight_layout()
+plt.savefig('Article_plots/Times_our_estimate.png')
