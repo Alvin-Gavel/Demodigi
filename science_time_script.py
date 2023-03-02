@@ -38,7 +38,7 @@ unpacked = json.loads(packed)
 all_ids = set(map(int, set(unpacked['IDs'])))
 n_participants = len(all_ids)
 
-# List the members of each module who actually finished the module
+# List the members of each version of the learning module who actually finished the module
 members = {}
 for dataset_name, dataset in datasets.items():
    members[dataset_name] = list(set(dataset['Student ID']).intersection(all_ids))
