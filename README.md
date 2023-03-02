@@ -4,6 +4,8 @@ The current contents of the repository are:
 
 `README.md`: This text
 
+`requirements.txt`: File listing the Python modules used in this repository, and which versions I used.
+
 `factorial_experiment.py`: Python module for analysing the results of a factorial experiment that we plan to do as part of the study. It can also be used for simulating similar studies, to test that the analysis at least makes sense on paper.
 
 `FE_demonstration_script.py`: Script that demonstrates the use of the module `factorial_experiment` by implementing a simple simulated study. To make that easier, it has verbose comments explaining what happens at every step along the way.
@@ -13,8 +15,6 @@ The current contents of the repository are:
 `FE_minimal_size_script.py`: Script using the module `factorial_experiment` to try to find the minimal number of participants that we need in order to measure the effects that we are interested in.
 
 `KL_analysis_script.py`: Script for analysing data from the learning module `Kartläggning`. The data must first be rewritten into a format readable by the `Factorial_experiment` module by the module `preprocessing`, which is found in the directory `Utilities`.
-
-`requirements.txt`: File listing the Python modules used in this repository, and which versions I used.
 
 `science_analysis_script.py`: Script for analysing data for the article (name pending). The data comes from the learning module `IT-säkerhet`. The data must first be rewritten into a format readable by the `Factorial_experiment` module by the script `PP_science_script` which uses the module `preprocessing`, both in the directory `Utilities`.
 
