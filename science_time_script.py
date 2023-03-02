@@ -6,6 +6,7 @@ modules.
 """
 
 import datetime
+import json
 
 import numpy as np
 import pandas as pd
@@ -27,10 +28,20 @@ datasets = {'QBL': pd.read_csv('Utilities/Actual_results/2023-01-28/QBL/raw_anal
 for dataset in datasets.values():
    dataset['Date Created']= pd.to_datetime(dataset['Date Created'])
 
-# TODO: Replace this with something that reads only the participants who finished.
+
+# This holds the participants that actually finished the module.
+ID_path = 'Utilities/Resultat/Artikel/IDn.json'
+f = open(ID_path, 'r')
+packed = f.read()
+f.close()
+unpacked = json.loads(packed)
+all_ids = set(map(int, set(unpacked['IDs'])))
+n_participants = len(all_ids)
+
+# List the members of each module who actually finished the module
 members = {}
 for dataset_name, dataset in datasets.items():
-   members[dataset_name] = list(set(dataset['Student ID']))
+   members[dataset_name] = list(set(dataset['Student ID']).intersection(all_ids))
 
 skills = ['Backup', 'WFH_Safety', 'Phishing_EmailAddresses', 'SafeEnvironments', 'Incognito', 'Spam', 'InfoOverPhone', 'GDPR_PersonalInformation', 'Cookies', 'PublicComputers', 'Virus', 'GDPR_Rights', 'Ransomware', 'IMEI', 'TwoFactorAuthentication', 'Password', 'PortableDeviceSafety', 'GDPR_SensitivePersonalData', 'PhoneFraud', 'SocialMedia', 'InfoOverInternet', 'Phishing_WebAddresses', 'OpenNetworks', 'Phishing_ShadyMails', 'GDPR_General']
 

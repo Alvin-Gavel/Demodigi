@@ -69,6 +69,7 @@ kalv
 kalvsvans
 oxe
 oxsvans
+oxkärra
 tjur
 tjurhorn
 tjursvans
