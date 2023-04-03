@@ -29,8 +29,20 @@ for dataset_name, dataset in datasets.items():
    members[dataset_name] = list(set(dataset['Student ID']).intersection(all_ids))
    n_members[dataset_name] = len(members[dataset_name])
 
-question_sets = {'One to five scale': ['Survey_UnderstoodInstructions', 'Survey_LikeInternetbasedLearning', 'Survey_ILearnedALot', 'Survey_GoodLevelOfDifficulty', 'Survey_LikedTheFeedback', 'Survey_QBLLearning', 'Survey_QBLMotivation', 'Survey_MoreQBLCourses'],
-'Never to always scale': ['Survey_SearchingForAnswers', 'Survey_FirstTry', 'Survey_ContinuedToRespond', 'Survey_Frustration']}
+question_sets = {
+'One to five scale': {'Survey_UnderstoodInstructions': 'I understood the instructions',
+                      'Survey_LikeInternetbasedLearning': 'I like internet-based learning',
+                      'Survey_ILearnedALot': 'The course was informative',
+                      'Survey_GoodLevelOfDifficulty': 'The questions were of appropriate difficulty',
+                      'Survey_LikedTheFeedback': 'The feedback in the questions was helpful',
+                      'Survey_QBLLearning': 'The fact that the course was question-based helped me learn the material',
+                      'Survey_QBLMotivation': 'The fact that the course was question-based motivated me',
+                      'Survey_MoreQBLCourses': 'If I take an online course in the future, I hope it is question-based'},
+'Never to always scale': {'Survey_SearchingForAnswers': 'I looked for the correct answer (e.g. on the internet) before answering the questions',
+                          'Survey_FirstTry': 'I tried my best to answer the questions correctly on the first try',
+                          'Survey_ContinuedToRespond': 'After answering a question correctly, I continued to click on incorrect answers to get more feedback',
+                          'Survey_Frustration': 'How often did you feel frustrated during the course?'}
+}
 
 
 # To clarify what goes on here: There is no column in the data from OLI Torus that
@@ -45,38 +57,38 @@ digit_regex = re.compile('[1-5]')
 responses = {}
 errors = {}
 for question_set_name, question_set in question_sets.items():
-   for question in question_set:
-      responses[question] = {}
-      errors[question] = {}
+   for question_name, question_text in question_set.items():
+      responses[question_name] = {}
+      errors[question_name] = {}
       for dataset_name, dataset in datasets.items():
-         entries = dataset[(dataset['Activity Title'] == question) & (dataset['Student ID'].isin(all_ids))]
+         entries = dataset[(dataset['Activity Title'] == question_name) & (dataset['Student ID'].isin(all_ids))]
       
-         responses[question][dataset_name] = np.zeros(5)
+         responses[question_name][dataset_name] = np.zeros(5)
          for response in entries['Feedback']:
             match = response_regex.findall(response)
          
             if len(match) == 1:
                digit = int(digit_regex.findall(match[0])[0])
-               responses[question][dataset_name][digit - 1] += 1
+               responses[question_name][dataset_name][digit - 1] += 1
       
-         errors[question][dataset_name] = np.sqrt(responses[question][dataset_name]) / n_members[dataset_name]
-         responses[question][dataset_name] /= n_members[dataset_name]
+         errors[question_name][dataset_name] = np.sqrt(responses[question_name][dataset_name]) / n_members[dataset_name]
+         responses[question_name][dataset_name] /= n_members[dataset_name]
 
       plt.clf()
       x_qbl = np.arange(1, 6) - 0.20
-      plt.bar(x_qbl, responses[question]['QBL'], width = 0.4, label = 'QBL')
-      plt.errorbar(x_qbl, responses[question]['QBL'], yerr=errors[question]['QBL'], fmt='none', ecolor='k', capsize = 5)
+      plt.bar(x_qbl, responses[question_name]['QBL'], width = 0.4, label = 'QBL')
+      plt.errorbar(x_qbl, responses[question_name]['QBL'], yerr=errors[question_name]['QBL'], fmt='none', ecolor='k', capsize = 5)
       x_pqbl = np.arange(1, 6) + 0.20
-      plt.bar(x_pqbl, responses[question]['pQBL'], width = 0.4, label = 'pQBL')
-      plt.errorbar(x_pqbl, responses[question]['pQBL'], yerr=errors[question]['pQBL'], fmt='none', ecolor='k', capsize = 5)
+      plt.bar(x_pqbl, responses[question_name]['pQBL'], width = 0.4, label = 'pQBL')
+      plt.errorbar(x_pqbl, responses[question_name]['pQBL'], yerr=errors[question_name]['pQBL'], fmt='none', ecolor='k', capsize = 5)
       plt.ylabel('Frequency')
-      plt.title(question)
+      #plt.title(question_text)
       plt.legend()
       if question_set_name == 'Never to always scale':
          plt.xticks(ticks = np.arange(1, 6), labels = ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'], rotation=90)
       
       plt.tight_layout()
-      plt.savefig('Article_plots/Responses_{}.png'.format(question))
+      plt.savefig('Article_plots/Responses_{}.png'.format(question_name))
 
 # Here we look for the time input by the users. This requires us to dig in the
 # Student Response column, where entries typically look something like this:
