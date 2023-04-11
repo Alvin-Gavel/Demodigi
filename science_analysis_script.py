@@ -1,7 +1,7 @@
 """
 This is a script that uses the Python module factorial_experiment to
-read the results from the course module kartläggningsmodul, which must
-in turn be created with the script PP_mapping_module_script in the
+read the results from the course module IT-säkerhet, which must
+in turn be created with the script PP_science_script in the
 directory Utilities.
 """
 
